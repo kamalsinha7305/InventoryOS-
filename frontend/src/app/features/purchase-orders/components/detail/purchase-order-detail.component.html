@@ -1,0 +1,19 @@
+<div class="page">
+  <h2>Purchase Order Details</h2>
+  <div *ngIf="loading">Loading...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="order">
+    <p><strong>PO#:</strong> {{ order.poNumber }}</p>
+    <p><strong>Product:</strong> {{ order.productName }}</p>
+    <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+    <p><strong>Unit Cost:</strong> {{ order.unitCost | number:'1.2-2' }}</p>
+    <p><strong>Total:</strong> {{ order.totalAmount | number:'1.2-2' }}</p>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+
+    <div class="actions">
+      <button (click)="approve()">Approve</button>
+      <button (click)="back()">Back</button>
+    </div>
+  </div>
+</div>

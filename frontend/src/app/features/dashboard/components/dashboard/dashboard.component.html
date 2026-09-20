@@ -1,0 +1,268 @@
+<div class="dashboard-page anim-fade-up">
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="dash-loading">
+    <div class="skeleton" style="height:120px;border-radius:14px;margin-bottom:12px"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+      <div class="skeleton" style="height:110px;border-radius:14px" *ngFor="let _ of [1,2,3,4]"></div>
+    </div>
+    <div class="skeleton" style="height:260px;border-radius:14px"></div>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="error">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    {{ error }}
+  </div>
+
+  <ng-container *ngIf="kpi && !loading">
+
+    <!-- Page Header -->
+    <div class="dash-header">
+      <div>
+        <h2>Dashboard</h2>
+        <p class="page-subtitle">
+          Real-time overview of your inventory operations
+          <span class="last-updated" *ngIf="kpi.lastUpdated">
+            · Updated {{ kpi.lastUpdated | date:'shortTime' }}
+          </span>
+        </p>
+      </div>
+      <div class="dash-quick-actions">
+        <a routerLink="/products/create" class="quick-action-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Product
+        </a>
+        <a routerLink="/warehouses/create" class="quick-action-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Warehouse
+        </a>
+        <a routerLink="/purchase-orders/create" class="quick-action-btn quick-action-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Purchase Order
+        </a>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+
+      <!-- Total Products -->
+      <div class="stat-card blue">
+        <div class="stat-icon-wrap stat-icon-wrap--blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <div class="stat-value">{{ kpi.totalProducts }}</div>
+        <div class="stat-label">Total Products</div>
+        <a routerLink="/products" class="stat-link">View all →</a>
+      </div>
+
+      <!-- Stock Value -->
+      <div class="stat-card emerald">
+        <div class="stat-icon-wrap stat-icon-wrap--emerald">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="stat-value stat-value--sm">${{ kpi.totalStockValue | number:'1.0-0' }}</div>
+        <div class="stat-label">Total Stock Value</div>
+        <div class="stat-sub">Combined inventory worth</div>
+      </div>
+
+      <!-- Low Stock -->
+      <div class="stat-card" [class.amber]="kpi.lowStockCount > 0" [class.emerald]="kpi.lowStockCount === 0">
+        <div class="stat-icon-wrap" [class.stat-icon-wrap--amber]="kpi.lowStockCount > 0" [class.stat-icon-wrap--emerald]="kpi.lowStockCount === 0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="stat-value">{{ kpi.lowStockCount }}</div>
+        <div class="stat-label">Low Stock Items</div>
+        <div class="stat-sub" *ngIf="kpi.lowStockCount === 0" style="color:#10b981">All stocked ✓</div>
+        <div class="stat-sub" *ngIf="kpi.lowStockCount > 0" style="color:#f59e0b">Needs replenishment</div>
+      </div>
+
+      <!-- Pending POs -->
+      <div class="stat-card violet">
+        <div class="stat-icon-wrap stat-icon-wrap--violet">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
+        <div class="stat-value">{{ kpi.pendingPurchaseOrders }}</div>
+        <div class="stat-label">Pending Orders</div>
+        <div class="stat-sub">Orders issued to suppliers awaiting delivery</div>
+        <a routerLink="/purchase-orders" class="stat-link" style="margin-top:6px">Manage POs →</a>
+      </div>
+
+      <!-- Health Score — donut card -->
+      <div class="stat-card health-card" [class.emerald]="kpi.healthScore >= 80" [class.amber]="kpi.healthScore >= 50 && kpi.healthScore < 80" [class.rose]="kpi.healthScore < 50">
+        <div class="health-donut-wrap">
+          <svg class="health-donut" viewBox="0 0 100 100" width="84" height="84">
+            <circle class="donut-bg" cx="50" cy="50" r="40" fill="none" stroke="#f1f5f9" stroke-width="10"/>
+            <circle class="donut-fill" cx="50" cy="50" r="40" fill="none"
+              [attr.stroke]="getHealthColor(kpi.healthScore)"
+              stroke-width="10"
+              stroke-linecap="round"
+              [attr.stroke-dasharray]="getDonutDash(kpi.healthScore)"
+              transform="rotate(-90 50 50)"/>
+            <text x="50" y="52" text-anchor="middle" dominant-baseline="central" font-size="18" font-weight="800" [attr.fill]="getHealthColor(kpi.healthScore)">{{ kpi.healthScore }}%</text>
+          </svg>
+        </div>
+        <div class="stat-label">Health Score</div>
+        <div class="health-label" [style.color]="getHealthColor(kpi.healthScore)">{{ getHealthLabel(kpi.healthScore) }}</div>
+      </div>
+
+    </div>
+
+    <!-- NEW Graph 1: Stock Valuation & Growth Curve Chart -->
+    <div class="chart-card valuation-trend-card">
+      <div class="section-header">
+        <div>
+          <h3 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:-2px"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            Inventory Valuation & Asset Trend
+          </h3>
+          <span class="chart-sub-text">6-Month inventory capital trajectory ($)</span>
+        </div>
+        <div class="trend-badge">
+          <span class="trend-arrow">↑ +15.4%</span> growth
+        </div>
+      </div>
+
+      <div class="svg-graph-container">
+        <svg class="trend-svg" viewBox="0 0 700 180" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2563eb" stop-opacity="0.32"/>
+              <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Horizontal Grid Lines -->
+          <line x1="30" y1="30" x2="670" y2="30" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <line x1="30" y1="80" x2="670" y2="80" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <line x1="30" y1="130" x2="670" y2="130" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+          <!-- Area Gradient Fill -->
+          <path [attr.d]="areaPathD" fill="url(#areaGradient)"/>
+
+          <!-- Curve Stroke -->
+          <path [attr.d]="linePathD" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
+
+          <!-- Interactive Data Points -->
+          <g *ngFor="let pt of trendPoints">
+            <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="5" fill="#ffffff" stroke="#2563eb" stroke-width="3" class="graph-point"/>
+            <text [attr.x]="pt.x" [attr.y]="pt.y - 12" text-anchor="middle" font-size="11" font-weight="700" fill="#3b82f6">
+              ${{ pt.value | number:'1.0-0' }}
+            </text>
+          </g>
+        </svg>
+
+        <!-- X-Axis Months -->
+        <div class="x-axis-months">
+          <span *ngFor="let pt of trendPoints" class="x-month">{{ pt.month }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row: Warehouse Capacity & Top Products -->
+    <div class="charts-row">
+
+      <!-- Warehouse Capacity Chart -->
+      <div class="chart-card" *ngIf="warehouseCharts.length > 0">
+        <div class="section-header">
+          <h3 class="section-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Warehouse Utilization
+          </h3>
+          <a routerLink="/warehouses" class="chart-link">All warehouses →</a>
+        </div>
+
+        <div class="wh-chart-list">
+          <div class="wh-chart-row" *ngFor="let w of warehouseCharts">
+            <div class="wh-chart-name" [title]="w.name">{{ w.name }}</div>
+            <div class="wh-bar-track">
+              <div class="wh-bar-fill"
+                [style.width.%]="w.pct"
+                [style.background]="getCapColor(w.pct)">
+              </div>
+            </div>
+            <div class="wh-chart-pct" [style.color]="getCapColor(w.pct)">{{ w.pct }}%</div>
+            <div class="wh-chart-cap">{{ w.used }}/{{ w.capacity }}</div>
+          </div>
+        </div>
+
+        <div class="chart-legend">
+          <span class="legend-dot" style="background:#10b981"></span> &lt;70% &nbsp;
+          <span class="legend-dot" style="background:#f59e0b"></span> 70–90% &nbsp;
+          <span class="legend-dot" style="background:#f43f5e"></span> &gt;90%
+        </div>
+      </div>
+
+      <!-- No warehouses placeholder -->
+      <div class="chart-card chart-empty" *ngIf="warehouseCharts.length === 0">
+        <div class="empty-icon">🏭</div>
+        <div class="empty-title">No warehouse data yet</div>
+        <div class="empty-sub">Add warehouses with capacity to see utilization charts</div>
+        <a routerLink="/warehouses/create" class="quick-action-btn quick-action-btn--primary" style="margin-top:14px;text-decoration:none">
+          + Add Warehouse
+        </a>
+      </div>
+
+      <!-- Top Products Stock Chart -->
+      <div class="chart-card" *ngIf="topProducts.length > 0">
+        <div class="section-header">
+          <h3 class="section-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Top Products by Stock Level
+          </h3>
+          <a routerLink="/products" class="chart-link">All products →</a>
+        </div>
+
+        <div class="prod-chart-list">
+          <div class="prod-chart-row" *ngFor="let p of topProducts; let i = index">
+            <div class="prod-rank">{{ i + 1 }}</div>
+            <div class="prod-chart-name" [title]="p.name">{{ p.name }}</div>
+            <div class="prod-bar-track">
+              <div class="prod-bar-fill"
+                [style.width.%]="(p.stock / p.maxStock) * 100"
+                [style.background]="CHART_COLORS[i % CHART_COLORS.length]">
+              </div>
+            </div>
+            <div class="prod-stock-val">{{ p.stock | number }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No products placeholder -->
+      <div class="chart-card chart-empty" *ngIf="topProducts.length === 0">
+        <div class="empty-icon">📦</div>
+        <div class="empty-title">No product stock data</div>
+        <div class="empty-sub">Add products with stock levels to see the chart</div>
+        <a routerLink="/products/create" class="quick-action-btn quick-action-btn--primary" style="margin-top:14px;text-decoration:none">
+          + Add Product
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Summary banner -->
+    <div class="dash-summary">
+      <div class="summary-item">
+        <span class="summary-icon">📦</span>
+        <span><strong>{{ kpi.totalProducts }}</strong> products tracked</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-item">
+        <span class="summary-icon">🏭</span>
+        <span><strong>{{ rawWarehouses.length }}</strong> warehouses active</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-item">
+        <span class="summary-icon">⚠️</span>
+        <span><strong>{{ kpi.lowStockCount }}</strong> low-stock alerts</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-item">
+        <span class="summary-icon">🛒</span>
+        <span><strong>{{ kpi.pendingPurchaseOrders }}</strong> pending orders</span>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

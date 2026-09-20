@@ -1,0 +1,127 @@
+<div class="page anim-fade-up">
+  <!-- Loading -->
+  <div class="page-card" *ngIf="loading">
+    <div class="skeleton" style="height:220px;border-radius:14px"></div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    {{ error }}
+  </div>
+
+  <!-- Content -->
+  <div class="page-card" *ngIf="warehouse && !loading">
+    
+    <!-- Top Header Bar -->
+    <div class="wh-detail-header">
+      <div class="wh-detail-title-group">
+        <button class="back-icon-btn" (click)="back()" title="Back to warehouses">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
+        <div>
+          <div class="wh-title-row">
+            <h2>{{ warehouse.name }}</h2>
+            <span class="badge" [class.badge-green]="warehouse.status === 'ACTIVE'" [class.badge-grey]="warehouse.status !== 'ACTIVE'">
+              {{ warehouse.status || 'ACTIVE' }}
+            </span>
+          </div>
+          <p class="wh-location-text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {{ warehouse.location || 'Location not specified' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="wh-action-btns">
+        <button class="btn-secondary" (click)="edit()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit Warehouse
+        </button>
+        <button class="btn-secondary" (click)="back()">
+          Back to List
+        </button>
+      </div>
+    </div>
+
+    <!-- 4-Card Statistics Grid -->
+    <div class="wh-stats-grid">
+
+      <!-- Donut Capacity Card -->
+      <div class="stat-card wh-donut-card">
+        <div class="wh-donut-container">
+          <svg viewBox="0 0 110 110" width="90" height="90">
+            <circle cx="55" cy="55" r="45" fill="none" stroke="#f1f5f9" stroke-width="12"/>
+            <circle cx="55" cy="55" r="45" fill="none"
+              [attr.stroke]="getCapColor(getCapacityPct())"
+              stroke-width="12"
+              stroke-linecap="round"
+              [attr.stroke-dasharray]="getDonutDash(getCapacityPct())"
+              stroke-dashoffset="70.68"
+              transform="rotate(-90 55 55)"/>
+            <text x="55" y="60" text-anchor="middle" font-size="20" font-weight="900" [attr.fill]="getCapColor(getCapacityPct())">
+              {{ getCapacityPct() }}%
+            </text>
+          </svg>
+        </div>
+        <div class="stat-label">Capacity Utilized</div>
+        <div class="wh-cap-status" [style.color]="getCapColor(getCapacityPct())">
+          {{ getCapStatusText(getCapacityPct()) }}
+        </div>
+      </div>
+
+      <!-- Total Capacity Card -->
+      <div class="stat-card blue">
+        <div class="stat-icon-wrap stat-icon-wrap--blue">🏬</div>
+        <div class="stat-value">{{ warehouse.capacity | number }}</div>
+        <div class="stat-label">Total Unit Capacity</div>
+        <div class="stat-sub">Maximum storage volume</div>
+      </div>
+
+      <!-- Available Units Card -->
+      <div class="stat-card emerald">
+        <div class="stat-icon-wrap stat-icon-wrap--emerald">✅</div>
+        <div class="stat-value">{{ warehouse.availableCapacity | number }}</div>
+        <div class="stat-label">Available Units</div>
+        <div class="stat-sub">Free space for inventory</div>
+      </div>
+
+      <!-- Used Units Card -->
+      <div class="stat-card amber">
+        <div class="stat-icon-wrap stat-icon-wrap--amber">📦</div>
+        <div class="stat-value">{{ getUsedCapacity() | number }}</div>
+        <div class="stat-label">Used Storage Units</div>
+        <div class="stat-sub">Occupied capacity</div>
+      </div>
+
+    </div>
+
+    <!-- Warehouse Properties Box -->
+    <div class="wh-info-section">
+      <h3 class="section-title">Warehouse Properties</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-label">Warehouse ID</div>
+          <div class="info-val">#{{ warehouse.id }}</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Operational Status</div>
+          <div class="info-val">
+            <span class="badge" [class.badge-green]="warehouse.status === 'ACTIVE'" [class.badge-grey]="warehouse.status !== 'ACTIVE'">
+              {{ warehouse.status || 'ACTIVE' }}
+            </span>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Created At</div>
+          <div class="info-val">{{ warehouse.createdAt ? (warehouse.createdAt | date:'mediumDate') : '—' }}</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Last Updated</div>
+          <div class="info-val">{{ warehouse.updatedAt ? (warehouse.updatedAt | date:'mediumDate') : '—' }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

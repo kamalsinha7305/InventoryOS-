@@ -1,0 +1,153 @@
+<div class="login-root">
+
+  <!-- Left panel: branding hero -->
+  <div class="login-hero" aria-hidden="true">
+    <div class="hero-inner">
+      <div class="hero-logo">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </div>
+      <h1 class="hero-title">InventoryOS</h1>
+      <p class="hero-tagline">Create your account to unlock real-time inventory management, role-based workflows, and analytics.</p>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-value">3 Roles</span>
+          <span class="hero-stat-label">Admin/Manager/Exec</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">Secure</span>
+          <span class="hero-stat-label">JWT Token Auth</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">Instant</span>
+          <span class="hero-stat-label">Workspace Setup</span>
+        </div>
+      </div>
+
+      <div class="hero-features">
+        <div class="hero-feature">
+          <span class="hero-feature-icon">🛡️</span>
+          <span><strong>Admin:</strong> Full control, user & product deletion</span>
+        </div>
+        <div class="hero-feature">
+          <span class="hero-feature-icon">💼</span>
+          <span><strong>Manager:</strong> Stock management & PO creation</span>
+        </div>
+        <div class="hero-feature">
+          <span class="hero-feature-icon">👁️</span>
+          <span><strong>Executive:</strong> Read-only analytics & reporting</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel: register form -->
+  <div class="login-panel">
+    <div class="login-card anim-fade-up wide-register-card">
+      <div class="auth-heading">
+        <div class="auth-mark">IM</div>
+        <div>
+          <h2>Create account</h2>
+          <p>Choose your role and set up access</p>
+        </div>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="submit()">
+
+        <!-- Role Selector Section -->
+        <div class="form-group" style="margin-bottom:20px">
+          <label>Select Account Role</label>
+          <div class="role-selector-grid">
+            <div
+              *ngFor="let r of roles"
+              class="role-card"
+              [class.role-card--active]="registerForm.value.role === r.value"
+              (click)="selectRole(r.value)"
+            >
+              <div class="role-card-header">
+                <span class="role-card-icon">{{ r.icon }}</span>
+                <div class="role-card-radio">
+                  <div class="radio-dot" *ngIf="registerForm.value.role === r.value"></div>
+                </div>
+              </div>
+              <div class="role-card-title">{{ r.label }}</div>
+              <div class="role-card-desc">{{ r.desc }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Fields Grid -->
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <div class="input-with-icon">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input id="username" formControlName="username" placeholder="e.g. alex_mgr" />
+            </div>
+            <div class="field-error" *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.invalid">
+              Username is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-with-icon">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input id="password" type="password" formControlName="password" placeholder="Min 6 characters" />
+            </div>
+            <div class="field-error" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+              Password is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="firstName">First name</label>
+            <input id="firstName" formControlName="firstName" placeholder="John" />
+            <div class="field-error" *ngIf="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid">
+              First name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last name</label>
+            <input id="lastName" formControlName="lastName" placeholder="Doe" />
+            <div class="field-error" *ngIf="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid">
+              Last name is required
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="email">Work Email</label>
+            <div class="input-with-icon">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input id="email" type="email" formControlName="email" placeholder="alex@company.com" />
+            </div>
+            <div class="field-error" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+              Please enter a valid email address (e.g. alex@company.com)
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:8px">
+          <button class="primary-action" type="submit" [disabled]="loading">
+            <span *ngIf="!loading">
+              Create Account
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+            <span *ngIf="loading">Creating account…</span>
+          </button>
+        </div>
+
+        <div class="auth-switch">
+          <span>Already registered?</span>
+          <a routerLink="/auth/login">Sign in</a>
+        </div>
+
+        <div class="error" *ngIf="error">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {{ error }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

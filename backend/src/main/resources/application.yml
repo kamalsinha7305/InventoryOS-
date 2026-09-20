@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: inventory-management-api
+
+  datasource:
+    url: jdbc:derby:./data/inventorydb;create=true
+    driver-class-name: org.apache.derby.jdbc.EmbeddedDriver
+    username: inventory_user
+    password: inventory_password
+
+  jpa:
+    database-platform: org.hibernate.community.dialect.DerbyLegacyDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    open-in-view: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  jwt:
+    secret: change-this-development-secret-before-production-use-please-change
+    expiration-ms: 86400000

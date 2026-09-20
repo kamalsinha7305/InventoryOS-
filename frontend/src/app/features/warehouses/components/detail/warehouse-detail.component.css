@@ -1,0 +1,171 @@
+/* ---------- Warehouse Detail Page Layout ---------- */
+
+.wh-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.wh-detail-title-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.wh-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.wh-title-row h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.wh-location-text {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.back-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--brand-600);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: all .15s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.back-icon-btn:hover {
+  background: var(--brand-50);
+  border-color: var(--brand-200);
+  color: var(--brand-700);
+  transform: translateX(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.wh-action-btns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---------- 4-Card Statistics Grid ---------- */
+.wh-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.wh-donut-card {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.wh-donut-container {
+  margin-bottom: 6px;
+}
+
+.wh-cap-status {
+  font-size: 12.5px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* ---------- Warehouse Properties Section ---------- */
+.wh-info-section {
+  padding: 24px 28px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+
+.wh-info-section .section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 18px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.info-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+}
+
+.info-val {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ---------- Responsive Breakpoints ---------- */
+@media (max-width: 960px) {
+  .wh-stats-grid,
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .wh-stats-grid,
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wh-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .wh-action-btns {
+    width: 100%;
+  }
+
+  .wh-action-btns button {
+    flex: 1;
+  }
+}

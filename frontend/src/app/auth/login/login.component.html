@@ -1,0 +1,120 @@
+<div class="login-root">
+
+  <!-- Left panel: branding hero -->
+  <div class="login-hero" aria-hidden="true">
+    <div class="hero-inner">
+      <div class="hero-logo">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </div>
+      <h1 class="hero-title">InventoryOS</h1>
+      <p class="hero-tagline">Smarter warehouse management — track stock, fulfill orders, and optimize capacity in real time.</p>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-value">99.9%</span>
+          <span class="hero-stat-label">Uptime</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">Real-time</span>
+          <span class="hero-stat-label">Stock Sync</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">Multi-WH</span>
+          <span class="hero-stat-label">Support</span>
+        </div>
+      </div>
+
+      <div class="hero-features">
+        <div class="hero-feature">
+          <span class="hero-feature-icon">📦</span>
+          <span>Multi-warehouse inventory tracking</span>
+        </div>
+        <div class="hero-feature">
+          <span class="hero-feature-icon">📊</span>
+          <span>Analytics & health score dashboards</span>
+        </div>
+        <div class="hero-feature">
+          <span class="hero-feature-icon">🔔</span>
+          <span>Low-stock alerts & purchase orders</span>
+        </div>
+        <div class="hero-feature">
+          <span class="hero-feature-icon">🔐</span>
+          <span>Role-based access control</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel: sign in form -->
+  <div class="login-panel">
+    <div class="login-card anim-fade-up">
+      <div class="auth-heading">
+        <div class="auth-mark">IM</div>
+        <div>
+          <h2>Welcome back</h2>
+          <p>Sign in to your workspace</p>
+        </div>
+      </div>
+
+      <!-- Quick Role Fill Shortcuts -->
+      <div class="demo-roles-section">
+        <div class="demo-roles-label">Quick Fill Demo Credentials</div>
+        <div class="demo-roles-grid">
+          <button
+            type="button"
+            *ngFor="let u of demoUsers"
+            class="demo-role-btn"
+            [class.demo-role-btn--active]="selectedDemoRole === u.role"
+            (click)="fillDemoCredentials(u)"
+            [title]="'Fill form with ' + u.role + ' credentials'"
+          >
+            <span class="demo-role-icon">{{ u.icon }}</span>
+            <span class="demo-role-name">{{ u.role }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="divider-with-text">
+        <span>or sign in with credentials</span>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="submit()">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-with-icon">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input id="username" formControlName="username" autocomplete="username" placeholder="Enter your username" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-with-icon">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input id="password" type="password" formControlName="password" autocomplete="current-password" placeholder="Enter your password" />
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:8px">
+          <button class="primary-action" id="login-submit-btn" type="submit" [disabled]="loading">
+            <span *ngIf="!loading">
+              Sign In
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+            <span *ngIf="loading">Signing in…</span>
+          </button>
+        </div>
+
+        <div class="auth-switch">
+          <span>New here?</span>
+          <a routerLink="/auth/register">Create an account</a>
+        </div>
+
+        <div class="error" *ngIf="error">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {{ error }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

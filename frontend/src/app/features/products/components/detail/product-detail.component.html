@@ -1,0 +1,20 @@
+<div class="page">
+  <h2>Product Details</h2>
+  <div *ngIf="loading">Loading...</div>
+  <div *ngIf="error" class="error">{{error}}</div>
+
+  <div *ngIf="product">
+    <p><strong>SKU:</strong> {{product.sku}}</p>
+    <p><strong>Name:</strong> {{product.name}}</p>
+    <p><strong>Unit Price:</strong> {{product.unitPrice | number:'1.2-2'}}</p>
+    <p><strong>Current Stock:</strong> {{product.currentStock}}</p>
+    <p><strong>Reorder Level:</strong> {{product.reorderLevel}}</p>
+    <p><strong>Category:</strong> {{product.categoryName}}</p>
+    <p><strong>Supplier:</strong> {{product.supplierName}}</p>
+
+    <div class="actions">
+      <button (click)="edit()">Edit</button>
+      <button (click)="back()">Back</button>
+    </div>
+  </div>
+</div>

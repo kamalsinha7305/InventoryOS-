@@ -1,0 +1,98 @@
+<div class="page anim-fade-up">
+  <div class="page-card">
+    <div class="wh-header">
+      <div>
+        <h2>Warehouses</h2>
+        <p class="page-subtitle">Manage storage locations, monitor capacity utilization and availability</p>
+      </div>
+      <div class="toolbar" *appHasRole="['Admin','Manager']">
+        <button (click)="create()" class="quick-action-btn quick-action-btn--primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Warehouse
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div *ngIf="loading" style="display:flex;flex-direction:column;gap:12px">
+      <div class="skeleton" style="height:48px;border-radius:10px" *ngFor="let _ of [1,2,3,4]"></div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="error">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      {{ error }}
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap" *ngIf="warehouses.length && !loading">
+      <table>
+        <thead>
+          <tr>
+            <th>Warehouse Name</th>
+            <th>Location</th>
+            <th>Total Capacity</th>
+            <th style="min-width:220px">Utilization & Availability</th>
+            <th>Status</th>
+            <th style="text-align:right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let w of warehouses">
+            <td>
+              <div class="wh-name-cell">
+                <div class="wh-icon">🏬</div>
+                <div>
+                  <strong class="wh-title">{{ w.name }}</strong>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="wh-location">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{ w.location || 'Not set' }}
+              </span>
+            </td>
+            <td><strong>{{ w.capacity | number }}</strong> units</td>
+            <td>
+              <div class="cap-bar-wrap">
+                <div class="cap-bar">
+                  <div class="cap-bar-fill"
+                    [class.green]="getCapColorClass(getCapacityPct(w)) === 'green'"
+                    [class.amber]="getCapColorClass(getCapacityPct(w)) === 'amber'"
+                    [class.red]="getCapColorClass(getCapacityPct(w)) === 'red'"
+                    [style.width.%]="getCapacityPct(w)">
+                  </div>
+                </div>
+                <span class="cap-pct" [class.red-text]="getCapacityPct(w) >= 90">{{ getCapacityPct(w) }}%</span>
+              </div>
+              <div class="cap-sub">
+                {{ getUsedCapacity(w) | number }} used / {{ w.availableCapacity | number }} free
+              </div>
+            </td>
+            <td>
+              <span class="badge" [class.badge-green]="w.status === 'ACTIVE'" [class.badge-grey]="w.status !== 'ACTIVE'">
+                {{ w.status || 'ACTIVE' }}
+              </span>
+            </td>
+            <td style="text-align:right">
+              <button (click)="view(w)" class="btn-secondary" title="View details">View</button>
+              <button *appHasRole="['Admin','Manager']" (click)="edit(w)" class="btn-secondary" title="Edit warehouse">Edit</button>
+              <button *appHasRole="['Admin']" (click)="delete(w)" class="btn-danger" title="Delete warehouse">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!warehouses.length && !loading" class="chart-card chart-empty" style="margin-top:20px">
+      <div class="empty-icon">🏬</div>
+      <div class="empty-title">No warehouses found</div>
+      <div class="empty-sub">Get started by creating your first warehouse location</div>
+      <button (click)="create()" class="quick-action-btn quick-action-btn--primary" style="margin-top:14px">
+        + Create Warehouse
+      </button>
+    </div>
+  </div>
+</div>

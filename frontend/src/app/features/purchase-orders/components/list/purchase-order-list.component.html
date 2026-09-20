@@ -1,0 +1,41 @@
+<div class="page">
+  <h2>Purchase Orders</h2>
+  <div class="toolbar" *appHasRole="['Admin','Manager']">
+    <button (click)="create()">New Purchase Order</button>
+  </div>
+
+  <table *ngIf="orders.length">
+    <thead>
+      <tr>
+        <th>PO#</th>
+        <th>Product</th>
+        <th>Supplier</th>
+        <th>Quantity</th>
+        <th>Unit Cost</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let o of orders">
+        <td>{{ o.poNumber }}</td>
+        <td>{{ o.productName }}</td>
+        <td>{{ o.supplierName }}</td>
+        <td>{{ o.quantity }}</td>
+        <td>{{ o.unitCost | number:'1.2-2' }}</td>
+        <td>{{ o.totalAmount | number:'1.2-2' }}</td>
+        <td>{{ o.status }}</td>
+        <td>
+          <button (click)="view(o)">View</button>
+          <button *appHasRole="['Admin','Manager']" (click)="approve(o)">Approve</button>
+          <button *appHasRole="['Admin']" (click)="delete(o)" class="btn-danger">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!orders.length && !loading">No purchase orders found.</div>
+  <div *ngIf="loading">Loading...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+</div>

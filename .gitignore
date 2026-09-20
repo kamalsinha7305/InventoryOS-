@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
+
+# Build files
+dist/
+build/
+.next/
+.angular/
+
+# Logs
+*.log
+
+# Coverage
+coverage/
+
+# Temporary Office files
+~$*
